@@ -4,12 +4,12 @@ import { Guardian, LocalGuardian, Student, UserName } from "./student.interface"
 const userNameSchema = new Schema<UserName>({
     firstName: {
         type: String,
-        required: true
+        required: [true, 'First Name Is Required']
     },
     middleName: String,
     lastName: {
         type: String,
-        required: true
+        required: [true, 'Last Name Is Required']
     },
 });
 
@@ -64,9 +64,23 @@ const localGurdianSchema = new Schema<LocalGuardian>({
 });
 
 const studentSchema = new Schema<Student>({
-    id: String,
-    name: userNameSchema,
-    gender: ["male", "female"], //enum type not array
+    id: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    name: {
+        type: userNameSchema,
+        required: true
+    },
+    gender: {
+        type: String,
+        enum: {
+            values: ["male", "female", "other"],
+            message: '{VALUE} is not valid'
+        },
+        required: true
+    },
     dateOfBirth: {
         type: String,
         required: true
@@ -83,7 +97,10 @@ const studentSchema = new Schema<Student>({
         type: String,
         required: true
     },
-    bloodGroup: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+    bloodGroup: {
+        type: String,
+        enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
+    },
     presentAddress: {
         type: String,
         required: true
@@ -93,10 +110,16 @@ const studentSchema = new Schema<Student>({
         required: true
     },
     guardian: gurdianSchema,
-    localGuardian: localGurdianSchema,
+    localGuardian: {
+        type: localGurdianSchema,
+        required: true
+    },
     profileImg: String,
-    isActive: ["active", "blocked"],
+    isActive: {
+        type: String,
+        enum: ["active", "blocked"],
+        default: 'active'
+    },
 });
-
 
 export const StudentModel = model<Student>('Student', studentSchema);
