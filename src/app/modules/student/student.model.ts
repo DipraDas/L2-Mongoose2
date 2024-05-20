@@ -1,6 +1,8 @@
 import { Schema, model } from "mongoose";
 import validator from 'validator';
 import { TGuardian, TLocalGuardian, TStudent, StudentModel, TUserName } from "./student.interface";
+import config from "../../config";
+import bcrypt from 'bcrypt';
 
 const userNameSchema = new Schema<TUserName>({
     firstName: {
@@ -99,6 +101,10 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentModel>({
         unique: true,
         trim: true
     },
+    password: {
+        type: String,
+        required: [true, 'Password is required'],
+    },
     name: {
         type: userNameSchema,
         required: [true, 'Student\'s Name is required']
@@ -168,6 +174,20 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentModel>({
         trim: true
     },
 });
+
+// Pre save middleware/hook : will work on create() save()
+studentSchema.pre('save', async function (next) {
+    console.log(this, 'pre hook : We saved our data.')
+    const user = this;
+    user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds))
+    next();
+})
+
+// post save middleware / hook
+studentSchema.post('save', async function () {
+    console.log(this, 'post hook : We saved our data.')
+})
+
 
 studentSchema.statics.isStudentExists = async function (id: string) {
     const isStudentExists = await Student.findOne({ id });
