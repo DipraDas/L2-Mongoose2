@@ -4,39 +4,7 @@ import { StudentServices } from "./student.service";
 import studentValidationSchema from "./student.zodValidator";
 // import studentValidationSchema from "./student.validation";
 
-const createStudent = async (req: Request, res: Response) => {
-    try {
-        const student = req.body.student;
-        // const { error } = studentValidationSchema.validate(student);
-        const zodparsedData = studentValidationSchema.parse(student);
-        const result = await StudentServices.createStudentIntoDB(zodparsedData);
-
-        // Joi
-        // if (error) {
-        //     res.status(500).json({
-        //         success: false,
-        //         message: 'Something went wrong',
-        //         error: error.details
-        //     })
-        // }
-
-        // Zod 
-
-
-
-        res.status(200).json({
-            success: true,
-            message: 'Student is created successfully',
-            data: result
-        })
-    } catch (err) {
-        res.status(500).json({
-            success: false,
-            message: 'Something went wrong',
-            error: err
-        })
-    }
-}
+// 
 
 const getAllStudents = async (req: Request, res: Response) => {
     try {
@@ -87,8 +55,42 @@ const deleteStudent = async (req: Request, res: Response) => {
 };
 
 export const StudentControllers = {
-    createStudent,
     getAllStudents,
     getSingleStudent,
     deleteStudent
 }
+
+
+const createStudent = async (req: Request, res: Response) => {
+    //     try {
+    //         const student = req.body.student;
+    //         // const { error } = studentValidationSchema.validate(student);
+    //         const zodparsedData = studentValidationSchema.parse(student);
+    //         const result = await StudentServices.createStudentIntoDB(zodparsedData);
+
+    //         // Joi
+    //         // if (error) {
+    //         //     res.status(500).json({
+    //         //         success: false,
+    //         //         message: 'Something went wrong',
+    //         //         error: error.details
+    //         //     })
+    //         // }
+
+    //         // Zod 
+
+
+
+    //         res.status(200).json({
+    //             success: true,
+    //             message: 'Student is created successfully',
+    //             data: result
+    //         })
+    //     } catch (err) {
+    //         res.status(500).json({
+    //             success: false,
+    //             message: 'Something went wrong',
+    //             error: err
+    //         })
+    //     }
+} 
