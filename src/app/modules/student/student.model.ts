@@ -99,9 +99,15 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
         unique: true,
         trim: true
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'User Id is required']
+    },
     name: {
         type: userNameSchema,
-        required: [true, 'Student\'s Name is required']
+        required: [true, 'Student\'s Name is required'],
+        unique: true,
+        ref: 'User'
     },
     gender: {
         type: String,
@@ -160,13 +166,7 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     profileImg: {
         type: String,
         trim: true
-    },
-    isActive: {
-        type: String,
-        enum: ["active", "blocked"],
-        default: 'active',
-        trim: true
-    },
+    }
 });
 
 studentSchema.methods.isUserExists = async function (id: string) {
