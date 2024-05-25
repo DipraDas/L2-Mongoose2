@@ -169,6 +169,10 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     }
 });
 
+studentSchema.virtual("fullname").get(function () {
+    return `${this.name.firstName} ${this.name.middleName} ${this.name.middleName}`;
+});
+
 studentSchema.methods.isUserExists = async function (id: string) {
     const existingUser = await Student.findOne({ id });
     return existingUser;
