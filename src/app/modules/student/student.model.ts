@@ -166,6 +166,10 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     profileImg: {
         type: String,
         trim: true
+    },
+    admissionSemester: {
+        type: Schema.Types.ObjectId,
+        ref: 'AcademicSemeter'
     }
 });
 
