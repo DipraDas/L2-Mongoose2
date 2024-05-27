@@ -1,17 +1,20 @@
-import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
+import { academicSemesterServices } from "./academicSemester.service";
+import sendResponse from "../../utils/sendResponse";
 
 const createAcademicSemester = catchAsync(async (req, res) => {
-    // const { student: studentData, password } = req.body;
-    // const result = await UserServices.createStudentIntoDB(password, studentData);
+    const result = await academicSemesterServices.createAcademicSemesterIntoDB(
+        req.body
+    );
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Academic Semester created successfully',
-        data: result
-    })
-})
+        message: "Academic semester created successfully",
+        data: result,
+    });
+});
+
 
 export const AcademicSemesterControllers = {
     createAcademicSemester
