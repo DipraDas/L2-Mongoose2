@@ -19,6 +19,19 @@ const AcademicSemesterSchema = new Schema<IAcademicSemester>(
     }
 );
 
+// restrict duplicate semester entry
+AcademicSemesterSchema.pre("save", async function (next) {
+    const isSemesterExists = await AcademicSemester.findOne({
+        year: this.year,
+        name: this.name,
+    });
+
+    if (isSemesterExists) {
+        throw new Error("Semester already exsists");
+    }
+    next();
+});
+
 export const AcademicSemester = model<IAcademicSemester>(
     "AcademicSemester",
     AcademicSemesterSchema
