@@ -1,25 +1,20 @@
-import { z } from 'zod';
+import { z } from "zod";
+import {
+    AcademicSemesterCode,
+    AcademicSemesterName,
+    Months,
+} from "./academicSemester.constants";
 
-// Define the Zod schemas for the string literals
-const months = z.enum([
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-]);
-
-const academicSemesterNames = z.enum(['Autumn', 'Summar', 'Fall']);
-
-const academicSemesterCodes = z.enum(['01', '02', '03']);
-
-// Define the main Zod schema for IAcademicSemester
-const academicSemesterSchema = z.object({
-    name: academicSemesterNames,
-    code: academicSemesterCodes,
-    year: z.date(),
-    startMonth: months,
-    endMonth: months
+const createAcademicSemesterValidationSchema = z.object({
+    body: z.object({
+        name: z.enum([...AcademicSemesterName] as [string, ...string[]]),
+        code: z.enum([...AcademicSemesterCode] as [string, ...string[]]),
+        year: z.string(),
+        startMonth: z.enum([...Months] as [string, ...string[]]),
+        endMonth: z.enum([...Months] as [string, ...string[]]),
+    }),
 });
 
-// Export the schema
-export const validateAcademicSemester = {
-    academicSemesterSchema
+export const AcademicSemesterValidations = {
+    createAcademicSemesterValidationSchema,
 };
