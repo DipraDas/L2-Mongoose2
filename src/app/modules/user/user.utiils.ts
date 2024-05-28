@@ -16,13 +16,25 @@ const findLastStudentId = async () => {
         })
         .lean();
 
-    return lastStudentId?.id ? parseInt(lastStudentId.id.slice(-4)) : 0;
+    return lastStudentId?.id ? lastStudentId.id.substring(6) : undefined;
 };
 
 export const generateStudentId = async (payload: IAcademicSemester) => {
-    const currentId = await findLastStudentId();
+    let currentId = (0).toString(); // 0000 byDefault
 
-    const uniqueId = (currentId + 1).toString().padStart(4, "0");
-    const studentId = `${payload.year}${payload.code}${uniqueId}`;
-    return studentId;
+    const lastStudentId = await findLastStudentId();
+    // 2020 01 0001 
+    const lastStudentSemesterCode = lastStudentId?.substring(4, 6);
+    const lastStudentYear = lastStudentId?.substring(0, 4);
+    const currentSemesterCode = payload.code;
+    const currentYear = payload.year;
+
+    if (lastStudentId && lastStudentSemesterCode === currentSemesterCode && lastStudentYear === currentYear) {
+        currentId = lastStudentId.substring(6);
+    }
+
+    let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
+
+    incrementId = `${payload.year}${payload.code}${incrementId}`;
+    return incrementId;
 };
