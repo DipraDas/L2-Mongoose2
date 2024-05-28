@@ -46,7 +46,7 @@ export const createStudentValidationSchema = z.object({
             gender: z.enum(["male", "female"], {
                 errorMap: () => ({ message: "The gender field must be male or female" }),
             }),
-            dateOfBirth: z.date().optional(),
+            dateOfBirth: z.string().optional(),
             contactNo: z.string().min(1, "Contact number is required"),
             emergencyContactNo: z.string().min(1, "Emergency contact number is required"),
             email: z
