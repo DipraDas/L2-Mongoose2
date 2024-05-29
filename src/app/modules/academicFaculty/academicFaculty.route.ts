@@ -7,12 +7,12 @@ const router = Router();
 
 router.post(
     "/create-faculty",
-    validateRequest(AcademicFacultyValidation.academicFacultyValidationSchema),
+    validateRequest(AcademicFacultyValidation.AcademicFacultyValidationSchema),
     AcademicFacultyController.createAcademicFaculty
 );
 router.patch(
     "/:facultyId",
-    validateRequest(AcademicFacultyValidation.academicFacultyValidationSchema),
+    validateRequest(AcademicFacultyValidation.AcademicFacultyValidationSchema),
     AcademicFacultyController.updateAcademicFaculty
 );
 router.get("/", AcademicFacultyController.getAllAcademicFaculty);
