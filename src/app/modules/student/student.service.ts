@@ -1,4 +1,8 @@
+import mongoose from "mongoose";
 import { Student } from "./student.model";
+import AppError from "../../errors/appError";
+import httpStatus from "http-status";
+import { User } from "../user/user.model";
 
 const getAllStudentsFromDB = async () => {
     const result = await Student.find()
@@ -32,13 +36,43 @@ const getSingleStudentFromDB = async (studentId: string) => {
 };
 
 const deleteStudentFromDB = async (studentId: string) => {
-    const result = await Student.updateOne(
-        { id: studentId },
-        { isDeleted: true }
-    );
-    return result;
-};
+    // if (!(await Student.isStudentExists(studentId))) {
+    //     throw new Error("User does not existss");
+    // }
 
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const deletedStudent = await Student.updateOne(
+            { id: studentId },
+            { isDeleted: true },
+            { new: true, session }
+        );
+
+        if (!deletedStudent) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Error deletin Student");
+        }
+        const deletedUser = await User.updateOne(
+            { id: studentId },
+            { isDeleted: true },
+            { new: true, session }
+        );
+
+        if (!deletedUser) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Error deletin User");
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return deletedUser;
+    } catch (error) {
+        await session.abortTransaction();
+        await session.endSession();
+    }
+};
 
 export const StudentServices = {
     getAllStudentsFromDB,
