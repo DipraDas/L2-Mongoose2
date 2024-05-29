@@ -169,8 +169,12 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     },
     admissionSemester: {
         type: Schema.Types.ObjectId,
-        ref: 'AcademicSemeter'
-    }
+        ref: 'AcademicSemester'
+    },
+    academicDepartment: {
+        type: Schema.Types.ObjectId,
+        ref: 'AcademicDepartment'
+    },
 });
 
 studentSchema.virtual("fullname").get(function () {

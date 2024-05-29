@@ -3,7 +3,7 @@ import { StudentControllers } from './student.controller';
 
 const router = express.Router();
 
-router.get("/", StudentControllers.getAllStudents); // will call controller function
+router.get("/", StudentControllers.getAllStudents);
 router.get("/:studentId", StudentControllers.getSingleStudent);
 router.delete("/:studentId", StudentControllers.deleteStudent);
 

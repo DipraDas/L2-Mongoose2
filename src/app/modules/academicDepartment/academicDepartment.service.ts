@@ -21,7 +21,7 @@ const updateAcademicDepartmentIntoDB = async (
 };
 
 const getAllAcademicDepartmentFromDB = async () => {
-    const result = AcademicDepartment.find({});
+    const result = AcademicDepartment.find().populate('academicFaculty');
     return result;
 };
 
