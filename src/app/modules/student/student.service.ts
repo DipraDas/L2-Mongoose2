@@ -3,6 +3,7 @@ import { Student } from "./student.model";
 import AppError from "../../errors/appError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
+import { TStudent } from "./student.interface";
 
 const getAllStudentsFromDB = async () => {
     const result = await Student.find()
@@ -16,6 +17,48 @@ const getAllStudentsFromDB = async () => {
     return result;
 };
 
+
+const updateSingleStudentIntoDB = async (
+    studentId: string,
+    payload: Partial<TStudent>
+) => {
+    // const result = await Student.findOne({ id: studentId });
+
+    const { name, guardian, localGuardian, ...remainingStudentData } = payload;
+
+    const modifiedUpdateData: Record<string, unknown> = {
+        ...remainingStudentData,
+    };
+
+    if (name && Object.keys(name).length) {
+        for (const [key, value] of Object.entries(name)) {
+            modifiedUpdateData[`name.${key}`] = value;
+        }
+    }
+
+    if (guardian && Object.keys(guardian).length) {
+        for (const [key, value] of Object.entries(guardian)) {
+            modifiedUpdateData[`guardian.${key}`] = value;
+        }
+    }
+    if (localGuardian && Object.keys(localGuardian).length) {
+        for (const [key, value] of Object.entries(localGuardian)) {
+            modifiedUpdateData[`localGuardian.${key}`] = value;
+        }
+    }
+    console.log(modifiedUpdateData);
+    const result = await Student.findOneAndUpdate(
+        { id: studentId },
+        modifiedUpdateData,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+    return result;
+};
+
+
 const getSingleStudentFromDB = async (studentId: string) => {
     // const result = await Student.findOne({ id: studentId });
 
@@ -23,7 +66,7 @@ const getSingleStudentFromDB = async (studentId: string) => {
     //     { $match: { id: studentId } }
     // ])
 
-    const result = await Student.findById(studentId)
+    const result = await Student.findOne({ studentId })
         .populate("admissionSemester")
         .populate({
             path: "academicDepartment",
@@ -76,5 +119,6 @@ const deleteStudentFromDB = async (studentId: string) => {
 export const StudentServices = {
     getAllStudentsFromDB,
     getSingleStudentFromDB,
-    deleteStudentFromDB
+    deleteStudentFromDB,
+    updateSingleStudentIntoDB
 }
