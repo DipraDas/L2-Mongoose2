@@ -38,7 +38,6 @@ const localGuardianValidationSchema = z.object({
 
 export const createStudentValidationSchema = z.object({
     body: z.object({
-        password: z.string().max(20),
         student: z.object({
             name: userNameValidationSchema.refine((value) => !!value, {
                 message: "Student Name is required",

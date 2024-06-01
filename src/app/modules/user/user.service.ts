@@ -61,9 +61,10 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
 
             return newStudent;
         }
-    } catch (error) {
+    } catch (error: any) {
         await session.abortTransaction();
         await session.endSession();
+        throw new Error(error)
     }
 
     // for creatin instance

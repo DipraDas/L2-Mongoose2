@@ -16,13 +16,14 @@ const findLastStudentId = async () => {
         })
         .lean();
 
-    return lastStudentId?.id ? lastStudentId.id.substring(6) : undefined;
+    return lastStudentId?.id
 };
 
 export const generateStudentId = async (payload: IAcademicSemester) => {
     let currentId = (0).toString(); // 0000 byDefault
 
     const lastStudentId = await findLastStudentId();
+
     // 2020 01 0001 
     const lastStudentSemesterCode = lastStudentId?.substring(4, 6);
     const lastStudentYear = lastStudentId?.substring(0, 4);
