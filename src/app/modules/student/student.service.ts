@@ -9,7 +9,6 @@ import { studentSearchableFields } from "./student.constant";
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
 
-
     const studentQuery = new QueryBuilder(Student.find()
         .populate("admissionSemester")
         .populate({
@@ -125,8 +124,8 @@ const updateSingleStudentIntoDB = async (
         }
     }
     console.log(modifiedUpdateData);
-    const result = await Student.findOneAndUpdate(
-        { id: studentId },
+    const result = await Student.findByIdAndUpdate(
+        studentId,
         modifiedUpdateData,
         {
             new: true,
@@ -144,7 +143,7 @@ const getSingleStudentFromDB = async (studentId: string) => {
     //     { $match: { id: studentId } }
     // ])
 
-    const result = await Student.findOne({ studentId })
+    const result = await Student.findById(studentId)
         .populate("admissionSemester")
         .populate({
             path: "academicDepartment",
@@ -165,8 +164,8 @@ const deleteStudentFromDB = async (studentId: string) => {
     try {
         session.startTransaction();
 
-        const deletedStudent = await Student.updateOne(
-            { id: studentId },
+        const deletedStudent = await Student.findByIdAndUpdate(
+            studentId,
             { isDeleted: true },
             { new: true, session }
         );
@@ -174,8 +173,11 @@ const deleteStudentFromDB = async (studentId: string) => {
         if (!deletedStudent) {
             throw new AppError(httpStatus.BAD_REQUEST, "Error deletin Student");
         }
-        const deletedUser = await User.updateOne(
-            { id: studentId },
+
+        const userId = deletedStudent.user;
+
+        const deletedUser = await User.findByIdAndUpdate(
+            userId,
             { isDeleted: true },
             { new: true, session }
         );
