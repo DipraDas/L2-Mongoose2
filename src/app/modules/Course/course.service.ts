@@ -29,6 +29,7 @@ const getSingleCourseFromDB = async (id: string) => {
 
 const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     const { preRequisiteCourses, ...courseRemainingData } = payload;
+
     const updateBasicCourseInfo = await Course.findByIdAndUpdate(
         id,
         courseRemainingData,
@@ -37,6 +38,16 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
             runValidators: true
         }
     )
+
+    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+        const deletedPreRequisites = preRequisiteCourses
+            .filter(el => el.course && el.isDeleted)
+            .map(el => el.course)
+
+        const deletedPrerequisiteCourses = await Course.findByIdAndUpdate(id, {
+            $pull: { preRequisiteCourses: { course: { $in: deletedPreRequisites } } }
+        })
+    }
     return updateBasicCourseInfo;
 }
 
