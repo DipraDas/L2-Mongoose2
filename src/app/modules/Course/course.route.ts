@@ -10,12 +10,13 @@ router.post(
     validateRequest(CourseValidation.createCourseValitionScrema),
     CourseController.createCourse
 );
-// router.patch(
-//     "/:id",
-//     validateRequest(AcademicFacultyValidation.AcademicFacultyValidationSchema),
-//     AcademicFacultyController.updateAcademicFaculty
-// );
+router.patch(
+    "/:id",
+    validateRequest(CourseValidation.updateCourseValidationSchema),
+    CourseController.updateCourse
+);
 router.get("/", CourseController.getAllCourses);
-router.get("/:facultyId", CourseController.getSingleCourse);
+router.get("/:id", CourseController.getSingleCourse);
+router.delete("/:id", CourseController.deleteCourse);
 
 export const CourseRoutes = router;
