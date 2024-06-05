@@ -15,6 +15,22 @@ const createCourseValitionScrema = z.object({
     })
 })
 
+const PreRequisiteUpdateoursesValidationSchema = z.object({
+    course: z.string().optional(),
+    isDeleted: z.boolean().optional(),
+})
+
+const updateCourseValitionScrema = z.object({
+    body: z.object({
+        title: z.string().optional(),
+        prefix: z.string().optional(),
+        code: z.number().optional(),
+        credits: z.number().optional(),
+        preRequisiteCourses: z.array(PreRequisiteUpdateoursesValidationSchema).optional(),
+    })
+})
+
 export const CourseValidation = {
-    createCourseValitionScrema
+    createCourseValitionScrema,
+    updateCourseValitionScrema
 }

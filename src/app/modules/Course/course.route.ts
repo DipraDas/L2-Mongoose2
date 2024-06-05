@@ -5,17 +5,17 @@ import { CourseController } from "./course.controller";
 
 const router = Router();
 
+router.get("/", CourseController.getAllCourses);
+router.get("/:id", CourseController.getSingleCourse);
 router.post(
     "/create-course",
     validateRequest(CourseValidation.createCourseValitionScrema),
     CourseController.createCourse
 );
-// router.patch(
-//     "/:id",
-//     validateRequest(AcademicFacultyValidation.AcademicFacultyValidationSchema),
-//     AcademicFacultyController.updateAcademicFaculty
-// );
-router.get("/", CourseController.getAllCourses);
-router.get("/:facultyId", CourseController.getSingleCourse);
+router.patch(
+    "/:id",
+    validateRequest(CourseValidation.updateCourseValitionScrema),
+    CourseController.updateCourse
+);
 
 export const CourseRoutes = router;
