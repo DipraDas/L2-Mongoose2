@@ -91,6 +91,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     userData.role = 'faculty';
 
     // find academic department info
+
     const academicDepartment = await AcademicDepartment.findById(
         payload.academicDepartment,
     );

@@ -1,24 +1,28 @@
 import { z } from 'zod';
 import { BloodGroup, Gender } from './faculty.constant';
 
-const createUserNameValidationSchema = z.object({
-  firstName: z
-    .string()
-    .min(1)
-    .max(20)
-    .refine((value) => /^[A-Z]/.test(value), {
-      message: 'First Name must start with a capital letter',
-    }),
-  middleName: z.string(),
-  lastName: z.string(),
-});
+// const createUserNameValidationSchema = z.object({
+//   firstName: z
+//     .string()
+//     .min(1)
+//     .max(20)
+//     .refine((value) => /^[A-Z]/.test(value), {
+//       message: 'First Name must start with a capital letter',
+//     }),
+//   middleName: z.string(),
+//   lastName: z.string(),
+// });
 
 export const createFacultyValidationSchema = z.object({
   body: z.object({
-    password: z.string().max(20),
+    password: z.string().max(20).optional(),
     faculty: z.object({
       designation: z.string(),
-      name: createUserNameValidationSchema,
+      name: z.object({
+        firstName: z.string(),
+        middleName: z.string().optional(),
+        lastName: z.string()
+      }),
       gender: z.enum([...Gender] as [string, ...string[]]),
       dateOfBirth: z.string().optional(),
       email: z.string().email(),
@@ -28,7 +32,7 @@ export const createFacultyValidationSchema = z.object({
       presentAddress: z.string(),
       permanentAddress: z.string(),
       academicDepartment: z.string(),
-      profileImg: z.string(),
+      profileImg: z.string().optional(),
     }),
   }),
 });
@@ -58,7 +62,7 @@ export const updateFacultyValidationSchema = z.object({
   }),
 });
 
-export const studentValidations = {
+export const facultyValidations = {
   createFacultyValidationSchema,
   updateFacultyValidationSchema,
 };

@@ -5,6 +5,8 @@ import { CourseController } from "./course.controller";
 
 const router = Router();
 
+router.get("/", CourseController.getAllCourses);
+router.get("/:id", CourseController.getSingleCourse);
 router.post(
     "/create-course",
     validateRequest(CourseValidation.createCourseValitionScrema),
@@ -12,11 +14,16 @@ router.post(
 );
 router.patch(
     "/:id",
-    validateRequest(CourseValidation.updateCourseValidationSchema),
+    validateRequest(CourseValidation.updateCourseValitionScrema),
     CourseController.updateCourse
 );
-router.get("/", CourseController.getAllCourses);
-router.get("/:id", CourseController.getSingleCourse);
-router.delete("/:id", CourseController.deleteCourse);
+router.put('/:courseId/assign-faculties',
+    validateRequest(CourseValidation.facultiesWithCourseValidationSchema),
+    CourseController.assignFaculties
+);
+router.delete('/:courseId/remove-faculties',
+    validateRequest(CourseValidation.facultiesWithCourseValidationSchema),
+    CourseController.removeFaculties
+);
 
 export const CourseRoutes = router;
