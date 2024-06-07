@@ -110,3 +110,4 @@ export const CourseController = {
     assignFaculties,
     removeFaculties
 };
+
