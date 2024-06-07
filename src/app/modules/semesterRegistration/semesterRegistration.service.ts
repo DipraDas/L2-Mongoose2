@@ -34,13 +34,28 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
 
 }
 
-const getAllSemesterRegistrationFromDB = async (query: Record<string, unknown>) => {
+const getAllSemesterRegistrationFromDB = async (
+    query: Record<string, unknown>
+) => {
+    const getAllSemesterRegistrationQuery = new QueryBuilder(
+        SemesterRegistration.find().populate("academicSemester"),
+        query
+    )
+        .filter()
+        .paginate()
+        .sort()
+        .fields();
 
-}
+    const result = getAllSemesterRegistrationQuery.modelQuery;
+    return result;
+};
 
 const getSingleSemesterRegistrationFromDB = async (id: string) => {
+    const result =
+        await SemesterRegistration.findById(id).populate("academicSemester");
+    return result;
+};
 
-}
 
 const updateSemesterRegistrationIntoDB = async (id: string, payload: Partial<TSemesterRegistration>) => {
 

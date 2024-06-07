@@ -26,32 +26,34 @@ const updateSemesterRegistration = catchAsync(async (req, res) => {
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Course updated successfully",
+        message: "Semester Registration updated successfully",
         data: result,
     });
 });
 
 const getAllSemesterRegistration = catchAsync(async (req, res) => {
-    const result = await SemesterRegistrationServices.getAllSemesterRegistrationFromDB(req.query);
+    const result =
+        await SemesterRegistrationServices.getAllSemesterRegistrationFromDB(
+            req.query
+        );
 
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "All Courses retrived successfully",
+        message: "Registered semester retrived succesfully",
         data: result,
     });
 });
 
 const getSingleSemesterRegistration = catchAsync(async (req, res) => {
     const { id } = req.params;
-
     const result =
         await SemesterRegistrationServices.getSingleSemesterRegistrationFromDB(id);
 
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Courses retrived successfully",
+        message: "Registered semester is retrived succesfully",
         data: result,
     });
 });
