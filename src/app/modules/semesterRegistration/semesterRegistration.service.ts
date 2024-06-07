@@ -1,18 +1,61 @@
 import mongoose from "mongoose";
 import QueryBuilder from "../../builder/queryBuilder";
 import { TSemesterRegistration } from "./semesterRegistration.interface";
+import { AcademicSemester } from "../academicSemester/academicSemester.model";
+import AppError from "../../errors/appError";
+import httpStatus from "http-status";
+import { SemesterRegistration } from "./semesterRegistration.model";
 
 const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) => {
 
+
+    const academicSemester = payload.academicSemester;
+
+    // check if semester is exists?
+    const isAcademicSemesterExists = await AcademicSemester.findById(academicSemester);
+    if (!isAcademicSemesterExists) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            'This academic semester not found.'
+        )
+    }
+
+    // check if the semster is already registered.
+    const isSemesterRegistrationExists = await SemesterRegistration.findOne({ academicSemester });
+    if (isSemesterRegistrationExists) {
+        throw new AppError(
+            httpStatus.CONFLICT,
+            'This semester is already exists.'
+        )
+    }
+
+    const result = await SemesterRegistration.create(payload);
+    return result;
+
 }
 
-const getAllSemesterRegistrationFromDB = async (query: Record<string, unknown>) => {
+const getAllSemesterRegistrationFromDB = async (
+    query: Record<string, unknown>
+) => {
+    const getAllSemesterRegistrationQuery = new QueryBuilder(
+        SemesterRegistration.find().populate("academicSemester"),
+        query
+    )
+        .filter()
+        .paginate()
+        .sort()
+        .fields();
 
-}
+    const result = getAllSemesterRegistrationQuery.modelQuery;
+    return result;
+};
 
 const getSingleSemesterRegistrationFromDB = async (id: string) => {
+    const result =
+        await SemesterRegistration.findById(id).populate("academicSemester");
+    return result;
+};
 
-}
 
 const updateSemesterRegistrationIntoDB = async (id: string, payload: Partial<TSemesterRegistration>) => {
 

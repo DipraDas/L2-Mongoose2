@@ -12,11 +12,11 @@ router.post(
     validateRequest(SemesterRegistrationValidationSchema.createSemesterRegistrationValidationSchema),
     SemesterRegistrationController.createSemesterRegistration
 );
-// router.patch(
-//     "/:id",
-//     validateRequest(CourseValidation.updateCourseValitionScrema),
-//     SemesterRegistrationController.updateCourse
-// );
+router.patch(
+    "/:id",
+    validateRequest(SemesterRegistrationValidationSchema.updateSemesterRegistrationValidationSchema),
+    SemesterRegistrationController.updateSemesterRegistration
+);
 // router.put('/:courseId/assign-faculties',
 //     validateRequest(CourseValidation.facultiesWithCourseValidationSchema),
 //     SemesterRegistrationController.assignFaculties
