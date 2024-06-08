@@ -19,10 +19,10 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
             ]
         })
 
-    if (!isThereAnyUpcomingOrOngoingSemester) {
+    if (isThereAnyUpcomingOrOngoingSemester) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
-            `There is already a ${isThereAnyUpcomingOrOngoingSemester} registered semester.`
+            `There is already a ${isThereAnyUpcomingOrOngoingSemester.status} registered semester.`
         )
     }
 
@@ -81,7 +81,7 @@ const updateSemesterRegistrationIntoDB = async (
     if (!isSemesterRegistrationExists) {
         throw new AppError(
             httpStatus.NOT_FOUND,
-            'This academic semester not found.'
+            'This Semester Registration not found.'
         )
     }
 
