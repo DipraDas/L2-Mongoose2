@@ -5,19 +5,22 @@ import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import AppError from "../../errors/appError";
 import httpStatus from "http-status";
 import { SemesterRegistration } from "./semesterRegistration.model";
+import { RegistrationStatus } from "./semesterRegistration.constant";
 
 const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) => {
 
     const academicSemester = payload.academicSemester;
 
-    // Check if there any registered sesemeter that is already 'UPCOMING' | 'ONGOING'
-    const isThereAnyUpcomingOrOngoingSemester =
-        await SemesterRegistration.findOne({
-            $or: [
-                { status: 'UPCOMING' },
-                { status: 'ONGOING' }
-            ]
-        })
+    const isThereAnyUpcomingOrOngoingSemester = await SemesterRegistration.findOne({
+        $or: [
+            {
+                status: RegistrationStatus.UPCOMING,
+            },
+            {
+                status: RegistrationStatus.ONGOING,
+            },
+        ],
+    });
 
     if (isThereAnyUpcomingOrOngoingSemester) {
         throw new AppError(
@@ -85,12 +88,24 @@ const updateSemesterRegistrationIntoDB = async (
         )
     }
 
-    const requestedSemesterStatus = isSemesterRegistrationExists?.status;
+    const currentSemesterStatus = isSemesterRegistrationExists?.status;
+    const requesteredStatus = payload.status;
 
-    if (requestedSemesterStatus === 'ENDED') {
+    if (currentSemesterStatus === RegistrationStatus.ENDED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             `This semester is already Ended.`
+        )
+    }
+
+    // UPCOMING --> ONGOING --> ENDED
+    if (
+        currentSemesterStatus === RegistrationStatus.UPCOMING
+        &&
+        requesteredStatus === RegistrationStatus.ENDED) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            `You can not directly change status from ${currentSemesterStatus} to ${requesteredStatus}`
         )
     }
 };
