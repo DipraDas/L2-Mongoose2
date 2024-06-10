@@ -26,7 +26,7 @@ const updateOfferedCourse = catchAsync(async (req, res) => {
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Semester Registration updated successfully",
+        message: "Offered course updated successfully",
         data: result,
     });
 });
@@ -40,7 +40,7 @@ const getAllOfferedCourse = catchAsync(async (req, res) => {
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Registered semester retrived succesfully",
+        message: "Offered course retrived succesfully",
         data: result,
     });
 });
@@ -53,7 +53,7 @@ const getSingleOfferedCourse = catchAsync(async (req, res) => {
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Registered semester is retrived succesfully",
+        message: "Single offered course is retrived succesfully",
         data: result,
     });
 });
@@ -67,7 +67,7 @@ const deleteOfferedCourse = catchAsync(async (req, res) => {
     SendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: "Courses retrived successfully",
+        message: "Offered course deleted successfully",
         data: result,
     });
 });
