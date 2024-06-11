@@ -7,8 +7,6 @@ import config from "../../config";
 
 const loginUser = async (payload: TLoginUser) => {
 
-    console.log('ppp', payload);
-
     const user = await User.isUserExistsByCustomId(payload.id);
     console.log('>>>>>.', user);
 
@@ -33,7 +31,7 @@ const loginUser = async (payload: TLoginUser) => {
     }
 
     const jwtPayload = {
-        userId: user,
+        userId: user.id,
         role: user.role
     }
 
