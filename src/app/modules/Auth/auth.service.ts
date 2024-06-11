@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import AppError from "../../errors/appError";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
+import jwt from "jsonwebtoken";
+import config from "../../config";
 
 const loginUser = async (payload: TLoginUser) => {
 
@@ -15,13 +17,12 @@ const loginUser = async (payload: TLoginUser) => {
     }
 
     // checking if the user is already deleted? 
-    // const isDeleted = isUserExists?.isDeleted;
-    // if (isDeleted) {
-    //     throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted.')
-    // }
+    const isDeleted = user?.isDeleted;
+    if (isDeleted) {
+        throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted.')
+    }
 
-    // // Checking if the user is blocked
-
+    // Checking if the user is blocked
     const userStatus = user?.status;
     if (userStatus === 'blocked') {
         throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked.')
@@ -31,9 +32,19 @@ const loginUser = async (payload: TLoginUser) => {
         throw new AppError(httpStatus.FORBIDDEN, 'Password not matched')
     }
 
-    // console.log(isPasswordMatched);
+    const jwtPayload = {
+        userId: user,
+        role: user.role
+    }
 
-    return {}
+    const accessToken = jwt.sign(jwtPayload, config.jwt_secret as string, {
+        expiresIn: '1d'
+    })
+
+    return {
+        accessToken,
+        needsPasswordChange: user?.needsPasswordChange
+    }
 }
 
 export const AuthServices = {
