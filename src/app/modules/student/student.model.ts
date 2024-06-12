@@ -101,13 +101,13 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
     },
     user: {
         type: Schema.Types.ObjectId,
-        required: [true, 'User Id is required']
+        required: [true, 'User Id is required'],
+        ref: 'User'
     },
     name: {
         type: userNameSchema,
         required: [true, 'Student\'s Name is required'],
-        unique: true,
-        ref: 'User'
+        unique: true
     },
     gender: {
         type: String,
