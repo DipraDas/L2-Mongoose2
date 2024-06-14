@@ -69,7 +69,8 @@ userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
     passwordChangedTimeStamp: Date,
     jwtIssuedTimestamp: number
 ) {
-    console.log(passwordChangedTimeStamp, jwtIssuedTimestamp)
+    const passwordChangedTime = new Date(passwordChangedTimeStamp).getTime() / 1000;
+    return passwordChangedTime > jwtIssuedTimestamp;
 }
 
 export const User = model<TUser, UserModel>('User', userSchema)
