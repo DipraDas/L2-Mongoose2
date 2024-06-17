@@ -214,22 +214,28 @@ const resetPassword = async (
     if (userStatus === 'blocked') {
         throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked.')
     }
+    const decoded = jwt.verify(token, config.jwt_secret as string) as JwtPayload;
 
-    const jwtPayload = {
-        userId: user.id,
-        role: user.role
+    if (payload.id !== decoded.userId) {
+        throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden.')
     }
 
-    const resetToken = createToken(
-        jwtPayload,
-        config.jwt_secret as string,
-        '10m'
+    //hash new password
+    const newHashedPassword = await bcrypt.hash(
+        payload.newPassword,
+        Number(config.bcrypt_salt_rounds)
     )
 
-    const resetUiLink = `http://localhost:3000?id=${user.id}&token=${resetToken}`
-    console.log(resetUiLink);
-
-    sendEmail(user.email, resetUiLink);
+    await User.findOneAndUpdate({
+        id: decoded.userId,
+        role: decoded.role
+    },
+        {
+            password: newHashedPassword,
+            needsPasswordChange: false,
+            passwordChangedAt: new Date()
+        }
+    )
 }
 
 export const AuthServices = {
