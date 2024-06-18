@@ -12,10 +12,13 @@ import { TFaculty } from "../Faculty/faculty.interface";
 import { AcademicDepartment } from "../academicDepartment/academicDepartment.model";
 import { Faculty } from "../Faculty/faculty.model";
 import { Admin } from "../Admin/admin.model";
-import { verifyToken } from "../Auth/auth.utils";
 import { sendImageToCloudinary } from "../../utils/sendImageToCloudinary";
 
-const createStudentIntoDB = async (password: string, studentData: TStudent) => {
+interface CloudinaryResponse {
+    secure_url: string;
+}
+
+const createStudentIntoDB = async (file: any, password: string, studentData: TStudent) => {
 
     const userData: Partial<TUser> = {};
 
@@ -42,6 +45,11 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
         // set student id
         userData.id = await generateStudentId(academicSemesterData);
 
+        const imageName = `${userData.id}${studentData?.name?.firstName}`;
+        const path = file?.path;
+
+        const { secure_url } = await sendImageToCloudinary(imageName, path) as CloudinaryResponse;
+
         // create user
         const newUser = await User.create([userData], { session }); //builtin static method
 
@@ -53,7 +61,7 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
             // set student id
             studentData.id = newUser[0].id;
             studentData.user = newUser[0]._id;
-
+            studentData.profileImg = secure_url
             const newStudent = await Student.create([studentData], { session });
 
             if (!newStudent.length) {
@@ -65,8 +73,6 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
 
             await session.commitTransaction();
             await session.endSession();
-
-            sendImageToCloudinary();
 
             return newStudent;
         }
