@@ -1,8 +1,7 @@
 import { UserServices } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
-import AppError from "../../errors/appError";
+import catchAsync from "../../utils/catchAsync"
 
 const createStudent = catchAsync(async (req, res) => {
     const { student: studentData, password } = req.body;

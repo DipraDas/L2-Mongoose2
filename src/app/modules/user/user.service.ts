@@ -13,6 +13,7 @@ import { AcademicDepartment } from "../academicDepartment/academicDepartment.mod
 import { Faculty } from "../Faculty/faculty.model";
 import { Admin } from "../Admin/admin.model";
 import { verifyToken } from "../Auth/auth.utils";
+import { sendImageToCloudinary } from "../../utils/sendImageToCloudinary";
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
 
@@ -64,6 +65,8 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
 
             await session.commitTransaction();
             await session.endSession();
+
+            sendImageToCloudinary();
 
             return newStudent;
         }
